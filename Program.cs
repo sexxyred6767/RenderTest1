@@ -2,7 +2,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 
-var app = WebApplication.Create(args);
+// Create the WebApplication
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Get the port from environment variable (Render sets PORT)
+var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+
+// Bind the app to the port
+app.Urls.Add($"http://*:{port}");
 
 // Memory store (Render will keep it alive as long as the server runs)
 var clients = new Dictionary<string, string>();
@@ -35,4 +43,5 @@ app.MapGet("/recv", (string device) =>
     return Results.Ok("");
 });
 
+// Start the app
 app.Run();
